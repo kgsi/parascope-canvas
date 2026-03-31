@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluid Smoke — Parascope Canvas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { background: #0a0a0c; color: #e8e4dc; height: 100vh; overflow: hidden; }
+    #art {
+      font-family: 'Noto Sans JP', sans-serif;
+      white-space: pre;
+      line-height: 1;
+      position: absolute;
+      top: 0; left: 0;
+      pointer-events: none;
+    }
+    #art .r { display: block; }
+    .w4 { font-weight: 400; }
+    .w7 { font-weight: 700; }
+    .a1 { opacity: 0.1; } .a2 { opacity: 0.2; } .a3 { opacity: 0.3; }
+    .a4 { opacity: 0.4; } .a5 { opacity: 0.5; } .a6 { opacity: 0.6; }
+    .a7 { opacity: 0.7; } .a8 { opacity: 0.8; } .a9 { opacity: 0.9; }
+    .a10 { opacity: 1; }
+    #stats {
+      position: fixed; bottom: 12px; right: 16px; z-index: 100;
+      font: 500 12px/1 'Inter', sans-serif;
+      color: rgba(255,255,255,0.25);
+      font-variant-numeric: tabular-nums;
+    }
+    .hint {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      font: 400 13px/1 'Noto Sans JP', sans-serif;
+      color: rgba(255,255,255,0.2); z-index: 100;
+      background: rgba(0,0,0,0.45); padding: 8px 18px; border-radius: 999px;
+      pointer-events: none; white-space: nowrap;
+    }
+    @media (max-width: 600px) { .hint { display: none; } }
+  </style>
+</head>
+<body>
+  <div id="art"></div>
+  <div class="hint">マウスを動かして煙をかき乱す</div>
+  <div id="stats"></div>
+  <script type="module" src="./fluid-smoke.ts"></script>
+</body>
+</html>
