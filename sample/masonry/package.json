@@ -1,0 +1,15 @@
+{
+  "name": "parascope-masonry",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "start": "bun ./index.html"
+  },
+  "dependencies": {
+    "@chenglou/pretext": "^0.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}

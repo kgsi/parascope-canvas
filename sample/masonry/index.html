@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Masonry — Parascope Canvas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: #f5f3ef;
+      overflow-y: scroll;
+      color: #2c2c2c;
+    }
+
+    /* --- Header --- */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245, 243, 239, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 20px 24px 16px;
+    }
+    .header-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .header h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #1a1a1a;
+    }
+
+    /* --- Stats --- */
+    .stats {
+      display: flex;
+      gap: 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #999;
+    }
+    .stats .value {
+      font-weight: 600;
+      color: #333;
+      font-variant-numeric: tabular-nums;
+    }
+    .stats .unit {
+      color: #aaa;
+      margin-left: 2px;
+    }
+    .stats .fast { color: #2a9d5c; }
+    .stats .slow { color: #c44; }
+
+    /* --- Controls --- */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .control-group label {
+      font-size: 12px;
+      color: #888;
+      white-space: nowrap;
+    }
+    .control-group input[type="range"] {
+      width: 160px;
+      accent-color: #333;
+    }
+    .control-group .range-value {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: #555;
+      min-width: 40px;
+      font-variant-numeric: tabular-nums;
+    }
+    .multiply-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      padding: 4px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .multiply-btn:hover { border-color: #999; color: #222; }
+    .multiply-btn.active { background: #333; color: #fff; border-color: #333; }
+    .animate-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      padding: 4px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .animate-btn:hover { border-color: #999; color: #222; }
+    .animate-btn.active { background: #e84; color: #fff; border-color: #e84; }
+
+    /* --- Cards --- */
+    .card {
+      position: absolute;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 24px;
+      color: #333;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      .stats { gap: 12px; }
+      .controls { flex-wrap: wrap; }
+      .control-group input[type="range"] { width: 120px; }
+    }
+  </style>
+
+  <div class="header">
+    <div class="header-top">
+      <h1>Pretext Masonry</h1>
+      <div class="stats">
+        <span>カード <span class="value" id="stat-total">0</span></span>
+        <span>DOM <span class="value" id="stat-dom">0</span><span class="unit"> / <span id="stat-dom-total">0</span></span></span>
+        <span>layout <span class="value" id="stat-layout">-</span><span class="unit">ms</span></span>
+        <span>FPS <span class="value" id="stat-fps">-</span></span>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="control-group">
+        <label>カラム幅</label>
+        <input type="range" id="col-width-slider" min="80" max="800" value="360" step="1" />
+        <span class="range-value" id="col-width-value">360px</span>
+      </div>
+      <div class="control-group">
+        <label>カード数</label>
+        <button class="multiply-btn" data-mult="1">×1</button>
+        <button class="multiply-btn active" data-mult="4">×4</button>
+        <button class="multiply-btn" data-mult="16">×16</button>
+        <button class="multiply-btn" data-mult="64">×64</button>
+      </div>
+      <div class="control-group">
+        <button class="animate-btn" id="animate-btn">▶ Animate</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>
