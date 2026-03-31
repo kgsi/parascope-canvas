@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+.cache/
+.parcel-cache/
+.next/
+.turbo/
+
+# Environment
+.env
+.env.local
+.env.*.local
